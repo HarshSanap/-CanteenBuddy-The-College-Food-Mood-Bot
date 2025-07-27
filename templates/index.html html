@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CanteenBuddy 🍽️</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <h2>CanteenBuddy</h2>
+        <div id="chat-box"></div>
+
+        <input type="text" id="mood" placeholder="How are you feeling?" />
+        <input type="text" id="time" placeholder="Time of day (e.g. lunch, evening)" />
+        <input type="number" id="budget" placeholder="Budget ₹" />
+
+        <button onclick="sendMessage()">Suggest</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const mood = document.getElementById("mood").value;
+            const time = document.getElementById("time").value;
+            const budget = document.getElementById("budget").value;
+
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<p><b>You:</b> Mood: ${mood}, Time: ${time}, Budget: ₹${budget}</p>`;
+
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mood, time, budget })
+            });
+
+            const data = await response.json();
+            chatBox.innerHTML += `<p><b>CanteenBuddy:</b> ${data.response}</p>`;
+        }
+    </script>
+</body>
+</html>
