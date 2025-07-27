@@ -1,0 +1,26 @@
+from flask import Flask, render_template, request, jsonify
+from chatbot import suggest_food
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    data = request.json
+    mood = data.get("mood", "")
+    time = data.get("time", "")
+    budget = data.get("budget", 50)
+
+    try:
+        budget = int(budget)
+    except:
+        budget = 50
+
+    reply = suggest_food(mood.lower(), time.lower(), budget)
+    return jsonify({"response": reply})
+
+if __name__ == "__main__":
+    app.run(debug=True)
